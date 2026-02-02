@@ -6,7 +6,7 @@ spring:
     name: asset-tracker-backend
 
   datasource:
-    url: postgresql://postgres:bNGeqSSaQoFPbjwgpKmqQSYOFJiWdMrN@postgres.railway.internal:5432/railway
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
 
   jpa:
