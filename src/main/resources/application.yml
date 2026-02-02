@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: asset-tracker-backend
+
+  datasource:
+    url: postgresql://postgres:bNGeqSSaQoFPbjwgpKmqQSYOFJiWdMrN@postgres.railway.internal:5432/railway
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
