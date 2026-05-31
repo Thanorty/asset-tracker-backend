@@ -6,10 +6,18 @@ spring:
     name: asset-tracker-backend
 
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
+    url: jdbc:postgresql://localhost:5432/assetdb
+    username: assetuser
+    password: assetpass
     driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    base-on-migrate: true
+    logging:
+      level:
+        org.flywaydb: DEBUG
 
   jpa:
     hibernate:
