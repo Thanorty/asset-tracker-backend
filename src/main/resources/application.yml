@@ -42,6 +42,15 @@ management:
       exposure:
         include: health,info
 
+pricing:
+  update-interval-ms: ${PRICING_INTERVAL_MS:300000}
+  coingecko:
+    base-url: https://api.coingecko.com/api/v3
+  yahoo:
+    base-url: https://query1.finance.yahoo.com
+  maybank-gold:
+    url: https://www.maybank2u.com.my/maybank2u/malaysia/en/personal/rates/gold.page
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
