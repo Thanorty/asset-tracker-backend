@@ -19,6 +19,15 @@ spring:
       hibernate:
         format_sql: true
 
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+
+jwt:
+  secret: ${JWT_SECRET:dGhpcyBpcyBhIHZlcnkgc2VjdXJlIGtleSBmb3IgYXNzZXQgdHJhY2tlciBiYWNrZW5k}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
 management:
   endpoints:
     web:
