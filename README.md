@@ -13,6 +13,7 @@ A **Spring Boot** REST API for personal finance management — track your invest
 | ORM | Spring Data JPA / Hibernate |
 | Security | Spring Security + JWT (jjwt 0.12.6) |
 | Caching | Caffeine (in-memory, 10 min TTL) |
+| API Docs | Swagger UI (SpringDoc OpenAPI 2.8.8) |
 | Utilities | Lombok |
 | Monitoring | Spring Actuator |
 | Containerization | Docker |
@@ -240,6 +241,23 @@ Returns a combined view with:
 |---|---|
 | `GET /actuator/health` | Application health check |
 | `GET /actuator/info` | Application info |
+
+## Swagger UI (API Documentation)
+
+Interactive API docs are available out of the box at:
+
+| URL | Description |
+|---|---|
+| [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) | Swagger UI (interactive) |
+| [http://localhost:8081/v3/api-docs](http://localhost:8081/v3/api-docs) | OpenAPI 3.0 JSON spec |
+
+**Using JWT in Swagger:**
+1. Call `POST /api/auth/login` (or `/register`) to get a token
+2. Click the **Authorize 🔒** button at the top of Swagger UI
+3. Enter your token (without the `Bearer ` prefix)
+4. All subsequent "Try it out" requests will include the token automatically
+
+> Swagger endpoints are **public** — no authentication required to view the docs.
 
 ## Caching
 
