@@ -15,4 +15,5 @@ public interface ExpenseService {
     Double getMonthlyTotal(int year, int month);
 
     List<Object[]> getCategorySummary();
+    List<Object[]> getCategorySummary(int year, int month);
 }

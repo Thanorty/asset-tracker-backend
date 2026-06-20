@@ -22,7 +22,7 @@ public class DashboardServiceImpl implements DashboardService {
         Double monthlyExpenses = expenseService.getMonthlyTotal(year, month);
 
         Map<String, Double> expenseByCategory = new HashMap<>();
-        expenseService.getCategorySummary()
+        expenseService.getCategorySummary(year, month)
                 .forEach(row ->
                         expenseByCategory.put(
                                 (String) row[0],

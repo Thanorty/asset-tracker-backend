@@ -31,13 +31,23 @@ public class CoinGeckoService {
     public List<CoinDto> getCoinList() {
         try {
             var response = restClient.get()
-                    .uri("/coins/list")
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/coins/markets")
+                            .queryParam("vs_currency", "usd")
+                            .queryParam("order", "market_cap_desc")
+                            .queryParam("per_page", 20)
+                            .queryParam("page", 1)
+                            .build())
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<CoinDto>>() {});
-            log.info("Fetched {} coins from CoinGecko", response != null ? response.size() : 0);
+
+            log.info("Fetched {} top coins from CoinGecko",
+                    response != null ? response.size() : 0);
+
             return response != null ? response : Collections.emptyList();
+
         } catch (Exception e) {
-            log.error("Failed to fetch coin list from CoinGecko: {}", e.getMessage());
+            log.error("Failed to fetch top coins from CoinGecko: {}", e.getMessage());
             return Collections.emptyList();
         }
     }

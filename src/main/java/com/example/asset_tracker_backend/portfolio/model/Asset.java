@@ -32,6 +32,9 @@ public class Asset {
     @Column(name = "unit_price")
     private Double unitPrice;
 
+    @Column(name = "buy_price")
+    private Double buyPrice;
+
     @Column(name = "current_value")
     private Double currentValue;
 

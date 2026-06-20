@@ -17,7 +17,7 @@ public class PriceScheduler {
      * Runs every 5 minutes (configurable via pricing.update-interval-ms).
      * Updates all asset prices from external APIs.
      */
-    @Scheduled(fixedRateString = "${pricing.update-interval-ms:300000}")
+//    @Scheduled(fixedRateString = "${pricing.update-interval-ms:300000}")
     public void updatePrices() {
         log.info("Scheduled price update started...");
         try {

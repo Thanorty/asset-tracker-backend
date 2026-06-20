@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 public class MaybankGoldService {
@@ -36,23 +39,11 @@ public class MaybankGoldService {
             // Look for table rows containing gold prices
             for (Element row : doc.select("table tr, .gold-rate, .rate-table tr")) {
                 String text = row.text().toLowerCase();
-                if (text.contains("selling") || text.contains("sell")) {
-                    sellPrice = extractPrice(row.text());
-                }
-                if (text.contains("buying") || text.contains("buy")) {
-                    buyPrice = extractPrice(row.text());
-                }
-            }
-
-            // Fallback: try extracting from any element with price-like patterns
-            if (sellPrice == null) {
-                for (Element el : doc.select("td, span, div")) {
-                    String text = el.text();
-                    if (text.matches(".*\\d+\\.\\d{2}.*") && el.previousElementSibling() != null
-                            && el.previousElementSibling().text().toLowerCase().contains("sell")) {
-                        sellPrice = extractPrice(text);
-                        break;
-                    }
+                boolean isGoldRow = text.contains("below 100 grams") ;
+                if (isGoldRow) {
+                    List<Double> goldPrice = extractPrice(row.text());
+                    sellPrice = goldPrice.get(1);
+                    buyPrice = goldPrice.get(0);
                 }
             }
 
@@ -70,13 +61,18 @@ public class MaybankGoldService {
         }
     }
 
-    private Double extractPrice(String text) {
+    private List<Double> extractPrice(String text) {
         try {
             // Extract numeric value like "234.56" from text
             var matcher = java.util.regex.Pattern.compile("(\\d+\\.\\d{2})").matcher(text);
-            if (matcher.find()) {
-                return Double.parseDouble(matcher.group(1));
+            List<Double> values = new ArrayList<>();
+
+            while (matcher.find()) {
+                values.add(Double.parseDouble(matcher.group()));
             }
+
+            return values;
+
         } catch (NumberFormatException e) {
             // ignore
         }

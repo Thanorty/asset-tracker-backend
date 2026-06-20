@@ -49,7 +49,9 @@ pricing:
   yahoo:
     base-url: https://query1.finance.yahoo.com
   maybank-gold:
-    url: https://www.maybank2u.com.my/maybank2u/malaysia/en/personal/rates/gold.page
+    url: https://www.maybank2u.com.my/maybank2u/malaysia/en/personal/rates/gold_and_silver.page
+  currency:
+    base-url: https://api.frankfurter.dev/v2/rates?
 
 springdoc:
   swagger-ui:

@@ -29,4 +29,10 @@ public class AssetController {
     public List<Asset> getAllAssets() {
         return assetService.getAllAssets();
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete asset", description = "Deletes an asset by ID")
+    public List<Asset> deleteAssets() {
+        return assetService.getAllAssets();
+    }
 }

@@ -4,9 +4,7 @@ import com.example.asset_tracker_backend.portfolio.model.Asset;
 import com.example.asset_tracker_backend.portfolio.repository.AssetRepository;
 import com.example.asset_tracker_backend.pricing.dto.GoldPriceDto;
 import com.example.asset_tracker_backend.pricing.dto.PriceUpdateResult;
-import com.example.asset_tracker_backend.pricing.provider.CoinGeckoService;
-import com.example.asset_tracker_backend.pricing.provider.MaybankGoldService;
-import com.example.asset_tracker_backend.pricing.provider.StockPriceService;
+import com.example.asset_tracker_backend.pricing.provider.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,8 @@ public class PriceService {
     private final CoinGeckoService coinGeckoService;
     private final StockPriceService stockPriceService;
     private final MaybankGoldService maybankGoldService;
+    private final GoldService goldService;
+    private final CurrencyConverter currencyConverter;
 
     /**
      * Update prices for all assets in the database.
@@ -33,6 +33,12 @@ public class PriceService {
         List<Asset> allAssets = assetRepository.findAll();
         int updated = 0;
         int failed = 0;
+
+        if (allAssets.isEmpty()) {
+            String msg = "No assets found to update";
+            log.info(msg);
+            return new PriceUpdateResult(0, 0, msg);
+        }
 
         // Group by type
         Map<String, List<Asset>> byType = allAssets.stream()
@@ -47,7 +53,7 @@ public class PriceService {
                     .toList();
 
             if (!coinIds.isEmpty()) {
-                Map<String, Double> prices = coinGeckoService.getPrices(coinIds, "usd");
+                Map<String, Double> prices = coinGeckoService.getPrices(coinIds, "myr");
                 for (Asset asset : cryptoAssets) {
                     Double price = prices.get(asset.getExternalId());
                     if (price != null) {
@@ -89,14 +95,30 @@ public class PriceService {
         }
 
         // Update gold prices (Maybank)
-        List<Asset> goldAssets = byType.getOrDefault("GOLD", List.of());
-        if (!goldAssets.isEmpty()) {
+        List<Asset> migaAssets = byType.getOrDefault("MIGA", List.of());
+        if (!migaAssets.isEmpty()) {
             GoldPriceDto goldPrice = maybankGoldService.getGoldPrice();
             if (goldPrice != null && goldPrice.getSellPrice() != null) {
-                for (Asset asset : goldAssets) {
+                for (Asset asset : migaAssets) {
                     asset.setUnitPrice(goldPrice.getSellPrice());
                     asset.setCurrentValue(goldPrice.getSellPrice() * (asset.getQuantity() != null ? asset.getQuantity() : 0));
                     asset.setCurrency("MYR");
+                    asset.setLastPriceUpdate(LocalDateTime.now());
+                    updated++;
+                }
+            } else {
+                failed += migaAssets.size();
+            }
+        }
+
+        List<Asset> goldAssets = byType.getOrDefault("GOLD", List.of());
+        if (!goldAssets.isEmpty()) {
+            Double goldPrice = goldService.getPrice();
+            if (goldPrice != null ) {
+                for (Asset asset : goldAssets) {
+                    asset.setUnitPrice(goldPrice);
+                    asset.setCurrentValue(goldPrice * (asset.getQuantity() != null ? asset.getQuantity() : 0));
+                    asset.setCurrency("USD");
                     asset.setLastPriceUpdate(LocalDateTime.now());
                     updated++;
                 }

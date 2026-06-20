@@ -43,4 +43,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<Object[]> getCategorySummary() {
         return expenseRepository.getExpenseGroupedByCategory();
     }
+
+    @Override
+    public List<Object[]> getCategorySummary(int year, int month) {
+        YearMonth ym = YearMonth.of(year, month);
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+        return expenseRepository.getExpenseGroupedByCategory(start, end);
+    }
 }
