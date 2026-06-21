@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "expenses")
@@ -25,9 +26,10 @@ public class Expense {
 
     private Double amount;
 
-    @Column(name = "recurring_expense")
+    @Column(name = "recurring")
     private Boolean recurringExpense;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
-    private String endDate;
+    private Date endDate;
 }
