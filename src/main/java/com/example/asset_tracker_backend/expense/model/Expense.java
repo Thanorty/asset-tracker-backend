@@ -25,4 +25,9 @@ public class Expense {
 
     private Double amount;
 
+    @Column(name = "recurring_expense")
+    private Boolean recurringExpense;
+
+    @Column(name = "end_date")
+    private String endDate;
 }

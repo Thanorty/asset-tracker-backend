@@ -27,6 +27,7 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<Asset> getAllAssets() {
         List<Asset> assets = assetRepository.findAll();
+
         if (assets.isEmpty()) {
             return assets;
         }
