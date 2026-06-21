@@ -1,6 +1,7 @@
 package com.example.asset_tracker_backend.expense.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -32,4 +33,8 @@ public class Expense {
     @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
     private Date endDate;
+
+    @NotNull
+    @Column(name = "user_id")
+    private Integer userId;
 }

@@ -39,11 +39,19 @@ public class AssetServiceImpl implements AssetService {
             if (asset.getLastPriceUpdate() != null && asset.getCurrency().equals(USD)) {
                 asset.setCurrentValue(asset.getQuantity() * asset.getUnitPrice() * conversionRate);
                 asset.setUnitPrice(asset.getUnitPrice() * conversionRate);
+                asset.setBuyPrice(asset.getBuyPrice() * conversionRate);
                 asset.setCurrency(MYR);
             }
         }
 
         return assets;
+    }
+
+    @Override
+    public void deleteAsset(Long id, Integer userId) {
+        var asset = assetRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new RuntimeException("Asset not found or not owned by the current user"));
+        assetRepository.delete(asset);
     }
 
     @Override

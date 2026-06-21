@@ -1,6 +1,7 @@
 package com.example.asset_tracker_backend.portfolio.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -45,4 +46,8 @@ public class Asset {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @NotNull
+    @Column(name = "user_id")
+    private Integer userId;
 }

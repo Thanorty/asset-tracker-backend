@@ -1,11 +1,13 @@
 package com.example.asset_tracker_backend.expense.controller;
 
+import com.example.asset_tracker_backend.auth.repository.UserRepository;
 import com.example.asset_tracker_backend.expense.dto.CategoryExpenseDto;
 import com.example.asset_tracker_backend.expense.model.Expense;
 import com.example.asset_tracker_backend.expense.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +20,20 @@ import java.util.List;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final UserRepository userRepository;
 
     @PostMapping
     @Operation(summary = "Record a new expense")
     public Expense createExpense(@RequestBody Expense expense) {
+        // Get the currently authenticated username from the security context
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        // Fetch the user by username and set their ID on the expense
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        expense.setUserId(user.getId().intValue());
+        
         return expenseService.createExpense(expense);
     }
 

@@ -14,4 +14,7 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
         GROUP BY a.type
     """)
     List<Object[]> getAllocationByType();
+
+    java.util.Optional<Asset> findByIdAndUserId(Long id, Integer userId);
 }
+

@@ -10,5 +10,7 @@ public interface AssetService {
 
     List<Asset> getAllAssets();
 
+    void deleteAsset(Long id, Integer userId);
+
     List<Object[]> getAllocationByType();
 }
